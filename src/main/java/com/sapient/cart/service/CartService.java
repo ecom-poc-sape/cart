@@ -1,5 +1,7 @@
 package com.sapient.cart.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -40,7 +42,7 @@ public class CartService {
 
 	}
 
-	public CartItems getAllCartItems(String customerId) {
+	public List<String> getAllCartItems(String customerId) {
 		return kafkaUtil.getAllCartItems(customerId);
 	}
 	
