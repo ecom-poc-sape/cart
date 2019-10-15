@@ -2,6 +2,7 @@ package com.sapient.cart.util.kafka;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -85,7 +86,7 @@ public class KafkaUtil {
 		return false;
 	}
 
-	public CartItems getAllCartItems(String customerId) {
+	public List<String> getAllCartItems(String customerId) {
 
 		ConsumerRecords<String, CartItems> poll = consumer.poll(100);
 		CartItems cartItem = null;
@@ -96,13 +97,12 @@ public class KafkaUtil {
 			Iterator<ConsumerRecord<String, CartItems>> iterator = poll.iterator();
 			while (iterator.hasNext()) {
 				cartItem = iterator.next().value();
-				List<Product> items = cartItem.getItems();
 				consumer.commitAsync();
 			}
 			kafkaTemplate.send(topicName, customerId, cartItem);
 		}
 
-		return cartItem;
+		return cartItem.getItems().stream().map(Product::getId).collect(Collectors.toList());
 
 	}
 }
