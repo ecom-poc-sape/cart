@@ -26,7 +26,6 @@ public class CartController {
 		try {
 			return cartService.addToCart(productId,customerId);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
@@ -38,7 +37,6 @@ public class CartController {
 		try {
 			return cartService.remove(productId,customerId);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
