@@ -9,6 +9,7 @@ import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -32,6 +33,9 @@ public class CartService {
 
 	@Autowired
 	private RestTemplate restTemplate;
+	
+	@Value("${cart.catalog.url}")
+	private String catalogUrl;
 
 	private static final Logger logger = LoggerFactory.getLogger(CartService.class);
 
@@ -44,10 +48,10 @@ public class CartService {
 				cart.setCustomerId(customerId);
 				cart.setProducts(new ArrayList<String>());
 				cart.getProducts().add(productId);
-				cartRepository.insert(cart);
+				cartDAO.save(cart);
 			} else {
 				cart.getProducts().add(productId);
-				cartRepository.save(cart);
+				cartDAO.update(cart);
 			}
 
 			/*
@@ -60,7 +64,6 @@ public class CartService {
 			 * next.value(); List<Product> items = cartItems.getItems(); items.add(product);
 			 * consumer.commitAsync(); } }
 			 */
-			
 			
 			return kafkaService.send( customerId, cart);
 		} catch (Exception e) {
@@ -80,6 +83,7 @@ public class CartService {
 				logger.error("No items are there to remove from cart");
 			} else {
 				cart.getProducts().removeIf(e -> e.equals(productId));
+				cartDAO.update(cart);
 			}
 
 			return kafkaService.remove(customerId, cart);
@@ -108,13 +112,13 @@ public class CartService {
 
 	public Product getItemById(String itemId) {
 
-		return restTemplate.getForObject("http://10.150.223.229:8091/catalogue/itemById/" + itemId, Product.class);
+		return restTemplate.getForObject(catalogUrl+"/catalogue/itemById/" + itemId, Product.class);
 
 	}
 
 	public Product getItemByName(String itemName) {
 
-		return restTemplate.getForObject("http://10.150.223.229:8091/catalogue/itemByName/" + itemName, Product.class);
+		return restTemplate.getForObject(catalogUrl+"/catalogue/itemByName/" + itemName, Product.class);
 
 	}
 

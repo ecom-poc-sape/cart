@@ -1,6 +1,5 @@
 package com.sapient.cart.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -12,7 +11,7 @@ public class Cart {
 	
 	private String customerId;
 	
-	private List<String> products = new ArrayList<>();
+	private List<String> products;
 
 	
 	public Cart() {
