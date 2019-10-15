@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,22 +20,33 @@ public class CartController {
 	@Autowired
 	private CartService cartService;
 	
-	@PostMapping("/add/{cutomerId}")
-	public Boolean addToCart(@PathVariable String cutomerId,@RequestBody Product item) {
+	@PostMapping("/add/{customerId}/{productId}")
+	public Boolean addToCart(@PathVariable String customerId,@PathVariable String productId) {
 		
-		return cartService.addToCart(item,cutomerId);
+		try {
+			return cartService.addToCart(productId,customerId);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
 		
 	}
 	
-	@DeleteMapping("/remove/{itemId}/{cutomerId}")
-	public Boolean removeFromCart(@PathVariable Integer itemId,@PathVariable String cutomerId) {
-		return cartService.remove(itemId,cutomerId);
-		
+	@DeleteMapping("/remove/{customerId}/{productId}")
+	public Boolean removeFromCart(@PathVariable String customerId,@PathVariable String productId) {
+		try {
+			return cartService.remove(productId,customerId);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
 	}
 	
-	@GetMapping("/viewDetailById/{itemId}")
-	public Product viewDetailById( @PathVariable Integer itemId) {
-		return cartService.getItemById(itemId);
+	@GetMapping("/viewDetailById/{productId}")
+	public Product viewDetailById( @PathVariable String productId) {
+		return cartService.getItemById(productId);
 	}
 	
 	@GetMapping("/viewDetailByName/{itemName}")
