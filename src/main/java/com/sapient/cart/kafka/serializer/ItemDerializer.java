@@ -5,7 +5,7 @@ import java.util.Map;
 import org.apache.kafka.common.serialization.Deserializer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sapient.cart.model.Product;
+import com.sapient.ecomm_commons.domain.Product;
 
 public class ItemDerializer implements Deserializer<Product>
 

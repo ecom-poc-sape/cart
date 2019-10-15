@@ -14,8 +14,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
-import com.sapient.cart.model.Product;
 import com.sapient.cart.model.DTO.CartItems;
+import com.sapient.ecomm_commons.domain.Product;
 
 @Service
 public class KafkaUtil {

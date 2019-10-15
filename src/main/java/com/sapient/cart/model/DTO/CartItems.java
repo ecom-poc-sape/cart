@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sapient.cart.model.Product;
+import com.sapient.ecomm_commons.domain.Product;
 
 public class CartItems implements Serializable{
 

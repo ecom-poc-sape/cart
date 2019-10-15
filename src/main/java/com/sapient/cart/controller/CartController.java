@@ -11,9 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sapient.cart.model.Product;
-import com.sapient.cart.model.DTO.CartItems;
 import com.sapient.cart.service.CartService;
+import com.sapient.ecomm_commons.domain.Product;
 
 @RestController()
 @RequestMapping(value = "/cart")

@@ -6,9 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.sapient.cart.model.Product;
-import com.sapient.cart.model.DTO.CartItems;
 import com.sapient.cart.util.kafka.KafkaUtil;
+import com.sapient.ecomm_commons.domain.Product;
 
 @Service
 public class CartService {
