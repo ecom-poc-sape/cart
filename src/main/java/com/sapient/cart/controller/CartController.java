@@ -1,5 +1,7 @@
 package com.sapient.cart.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,7 +46,7 @@ public class CartController {
 	}
 	
 	@GetMapping("/getAllCartItems/{customerId}")
-	public CartItems getAllCartItems(@PathVariable String customerId) {
+	public List<String> getAllCartItems(@PathVariable String customerId) {
 		return cartService.getAllCartItems(customerId);
 	}
 }
