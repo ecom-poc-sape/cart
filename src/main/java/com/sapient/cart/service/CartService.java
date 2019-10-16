@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -26,9 +27,6 @@ public class CartService {
 	private CartDAO cartDAO;
 
 	@Autowired
-	private CartRepository cartRepository;
-
-	@Autowired
 	private KafkaService kafkaService;
 
 	@Autowired
@@ -41,6 +39,7 @@ public class CartService {
 
 	public Boolean addToCart(String productId, String customerId) throws Exception {
 		try {
+			
 			Cart cart = cartDAO.getbyCustomerId(customerId);
 			if (cart == null) {
 				cart = new Cart();
@@ -48,9 +47,11 @@ public class CartService {
 				cart.setCustomerId(customerId);
 				cart.setProducts(new ArrayList<String>());
 				cart.getProducts().add(productId);
+				notifyKafka(customerId, cart);
 				cartDAO.save(cart);
 			} else {
 				cart.getProducts().add(productId);
+				notifyKafka(customerId, cart);
 				cartDAO.update(cart);
 			}
 
@@ -65,12 +66,22 @@ public class CartService {
 			 * consumer.commitAsync(); } }
 			 */
 			
-			return kafkaService.send( customerId, cart);
+			return true;
 		} catch (Exception e) {
 			logger.error("error writing into the destination mango/kafka");
 			throw new Exception(e);
 		}
 
+	}
+	
+	
+	@Async
+	public void notifyKafka(String customerId, Cart cart) {
+		try {
+			kafkaService.send( customerId, cart);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public Boolean remove(String productId, String customerId) throws Exception {
