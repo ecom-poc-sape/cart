@@ -14,6 +14,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.sapient.cart.dao.CartDAO;
 import com.sapient.cart.dao.base.CartRepository;
 import com.sapient.cart.model.Cart;
@@ -121,11 +122,14 @@ public class CartService {
 
 	}
 
+	
 	public Product getItemById(String itemId) {
 
 		return restTemplate.getForObject(catalogUrl+"/catalogue/itemById/" + itemId, Product.class);
 
 	}
+	
+	
 
 	public Product getItemByName(String itemName) {
 

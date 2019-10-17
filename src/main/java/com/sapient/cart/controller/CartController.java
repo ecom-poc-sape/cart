@@ -1,5 +1,6 @@
 package com.sapient.cart.controller;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.sapient.cart.service.CartService;
 import com.sapient.ecomm_commons.domain.Product;
 
@@ -19,6 +21,7 @@ public class CartController {
 
 	@Autowired
 	private CartService cartService;
+	
 	
 	@PostMapping("/add/{customerId}/{productId}")
 	public Boolean addToCart(@PathVariable String customerId,@PathVariable String productId) {
@@ -31,6 +34,8 @@ public class CartController {
 		return false;
 		
 	}
+	
+	
 	
 	@DeleteMapping("/remove/{customerId}/{productId}")
 	public Boolean removeFromCart(@PathVariable String customerId,@PathVariable String productId) {
@@ -47,13 +52,20 @@ public class CartController {
 		return cartService.getItemById(productId);
 	}
 	
+	
 	@GetMapping("/viewDetailByName/{itemName}")
 	public Product viewDetailByName(@PathVariable String itemName) {
 		return cartService.getItemByName(itemName);
 	}
 	
+	
+	@HystrixCommand(fallbackMethod = "getDefaultProduct")
 	@GetMapping("/getAllCartItems/{customerId}")
 	public List<String> getAllCartItems(@PathVariable String customerId) {
 		return cartService.getAllCartItems(customerId);
+	}
+	
+	public List<String> getDefaultProduct(String customerId) {
+		return Arrays.asList(new String[]{"product-1"});
 	}
 }
