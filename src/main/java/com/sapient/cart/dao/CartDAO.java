@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import com.mongodb.BasicDBObject;
+import com.mongodb.client.result.DeleteResult;
 import com.sapient.cart.model.Cart;
 
 @Repository
@@ -32,6 +33,14 @@ public class CartDAO {
 	
 	public void save(Cart cart) {
 		mongoTemplate.save(cart);
+	}
+	
+	public boolean removebyCustomerId(String customerId){
+		Query query = new Query();
+		query.addCriteria(Criteria.where("customerId").is(customerId));
+		DeleteResult remove = mongoTemplate.remove(query, Cart.class);
+		
+		return remove.getDeletedCount() > 0 ? true : false;
 	}
 	  
 }
